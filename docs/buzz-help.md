@@ -352,6 +352,10 @@ revokes all of them, and a pairing unused for 30 days expires.
 - Plugins can add actions to this toolbar. A link to an active plugin panel
   opens that panel in the conversation. If the plugin is removed, its actions
   and panel links become unavailable.
+- On macOS, plugins that use the camera also need macOS permission for Buzz.
+  If access was denied, check **System Settings → Privacy & Security → Camera**.
+  The app's camera declaration does not enable video by itself or grant a plugin
+  permission automatically.
 - **Forward message** in a message's hover actions or message menu sends its link
   to one person in the current community, with an optional note. Buzz sends it
   in your direct message with them, starting one if needed, and you stay where

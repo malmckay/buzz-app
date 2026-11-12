@@ -49,7 +49,7 @@ const assembly = jobs.publish.steps.find((step) =>
   step.run?.includes("sha256sum --check"),
 ).run;
 
-test("Tauri and the release signer use microphone entitlements and verify the signed app", () => {
+test("Tauri and the release signer preserve camera and microphone declarations in the signed app", () => {
   const config = JSON.parse(
     readFileSync(join(root, "src-tauri/tauri.conf.json"), "utf8"),
   );
@@ -60,8 +60,26 @@ test("Tauri and the release signer use microphone entitlements and verify the si
     readFileSync(join(root, path), "utf8"),
     /<key>com\.apple\.security\.device\.audio-input<\/key>\s*<true\s*\/>/,
   );
+  assert.match(
+    readFileSync(join(root, path), "utf8"),
+    /<key>com\.apple\.security\.device\.camera<\/key>\s*<true\s*\/>/,
+  );
+  assert.match(
+    readFileSync(join(root, "src-tauri/Info.plist"), "utf8"),
+    /<key>NSCameraUsageDescription<\/key>\s*<string>[^<\s][^<]*<\/string>/,
+  );
   const verify = jobs.build.steps.find(
     (step) => step.name === "Verify release DMG",
+  );
+  assert.ok(
+    verify.run.includes(
+      `Print :NSCameraUsageDescription' "$app/Contents/Info.plist"`,
+    ),
+  );
+  assert.ok(
+    verify.run.includes(
+      `test "$(/usr/libexec/PlistBuddy -c 'Print :com.apple.security.device.camera' "$RUNNER_TEMP/signed-entitlements.plist")" = true ||`,
+    ),
   );
   assert.ok(
     verify.run.includes(
