@@ -3382,6 +3382,14 @@ html[data-keyboard-navigation] .rawDiff:focus-visible {
 .message[data-stack-previous] {
   padding-top: var(--space-half);
 }
+/* A flat list separates one author's messages by 8px, so each still reads
+   as its own message rather than a paragraph of the previous one. */
+:where(html[data-message-density="compact"]) .message[data-stack-next] {
+  padding-bottom: var(--space-1);
+}
+:where(html[data-message-density="compact"]) .message[data-stack-previous] {
+  padding-top: var(--space-1);
+}
 .message .byline {
   padding-inline-start: var(--space-4);
   font-size: var(--text-caption);
